@@ -1,0 +1,17 @@
+{
+	"name": "serverless_sql_for_data_read",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP 100 * FROM\n    OPENROWSET (\n        BULK 'https://adlsstgaccdemoneu.dfs.core.windows.net/synapse-datastore/orders_dataset.csv',\n        FORMAT = 'csv',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) AS [result];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

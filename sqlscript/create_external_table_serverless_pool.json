@@ -1,0 +1,17 @@
+{
+	"name": "create_external_table_serverless_pool",
+	"properties": {
+		"content": {
+			"query": "CREATE DATABASE SalesDB;\n\nUSE SalesDB;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
