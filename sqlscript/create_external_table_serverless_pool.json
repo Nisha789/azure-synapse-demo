@@ -2,12 +2,12 @@
 	"name": "create_external_table_serverless_pool",
 	"properties": {
 		"content": {
-			"query": "CREATE DATABASE SalesDB;\n\nUSE SalesDB;\n\nCREATE SCHEMA Sales;",
+			"query": "CREATE DATABASE SalesDB;\n\nUSE SalesDB;\n\nCREATE SCHEMA Sales;\n\nCREATE EXTERNAL DATA SOURCE RawDataExternalLoc\nWITH (\n    LOCATION = 'https://adlsstgaccdemoneu.dfs.core.windows.net/synapse-datastore/'\n);\n\nCREATE EXTERNAL FILE FORMAT csvFormat\nWITH (\n    FORMAT_TYPE = DELIMITEDTEXT,\n    FORMAT_OPTIONS (\n        FIELD_TERMINATOR = ',',\n        STRING_DELIMITER = '\"',\n        FIRST_ROW = 2 -- Skip the header row\n    )\n);\n\nCREATE EXTERNAL TABLE Sales.Orders\n(\n    ORDERNUMBER INT,\n    QUANTITYORDERED INT,\n    PRICEEACH FLOAT,\n    ORDERLINENUMBER INT,\n    SALES FLOAT,\n    ORDERDATE VARCHAR(50),\n    STATUS VARCHAR(50),\n    QTR_ID INT,\n    MONTH_ID INT,\n    YEAR_ID INT\n)\nWITH (\n    LOCATION = 'raw-data/sales_data.csv', -- Path within the container\n    DATA_SOURCE = RawDataExternalLoc,\n    FILE_FORMAT = csvFormat\n);\n\nSELECT COUNT(*) from Sales.Orders;\n\nSELECT TOP 5 * FROM Sales.Orders;",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "SalesDB",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
