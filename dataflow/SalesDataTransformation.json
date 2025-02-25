@@ -1,0 +1,64 @@
+{
+	"name": "SalesDataTransformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SalesDataset",
+						"type": "DatasetReference"
+					},
+					"name": "SalesData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SalesAggregatesSink",
+						"type": "DatasetReference"
+					},
+					"name": "SalesAggregate"
+				}
+			],
+			"transformations": [
+				{
+					"name": "filterShipped"
+				},
+				{
+					"name": "AggregateSales"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ORDERNUMBER as short,",
+				"          QUANTITYORDERED as short,",
+				"          PRICEEACH as double,",
+				"          ORDERLINENUMBER as short,",
+				"          SALES as double,",
+				"          ORDERDATE as timestamp,",
+				"          STATUS as string,",
+				"          QTR_ID as short,",
+				"          MONTH_ID as short,",
+				"          YEAR_ID as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SalesData",
+				"SalesData filter(STATUS=='Shipped') ~> filterShipped",
+				"filterShipped aggregate(groupBy(YEAR_ID,",
+				"          MONTH_ID),",
+				"     TotalSale = sum(SALES)) ~> AggregateSales",
+				"AggregateSales sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'document',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SalesAggregate"
+			]
+		}
+	}
+}
