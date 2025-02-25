@@ -264,6 +264,110 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/spark_df_delta_table_write')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "sparkPool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "55c29beb-43ce-462b-bd5f-9523662852b9"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/3d8fd8d8-75b0-4a7f-9560-4ec4b4157f91/resourceGroups/rg-demo-neu/providers/Microsoft.Synapse/workspaces/az-synapse-demo-neu/bigDataPools/sparkPool",
+						"name": "sparkPool",
+						"type": "Spark",
+						"endpoint": "https://az-synapse-demo-neu.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkPool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"from pyspark.sql.functions import sum,col"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"df = spark.read.load('abfss://synapse-datastore@adlsstgaccdemoneu.dfs.core.windows.net/raw-data/sales_data.csv',format='csv',header=True,inferSchema=True)"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"# Define the schema (database)\n",
+							"spark.sql(\"CREATE DATABASE IF NOT EXISTS salesmart\")"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"# Perform some aggregation (eg. total_sales by year)\n",
+							"aggregated_df = df.groupBy(\"YEAR_ID\").agg(sum(col(\"SALES\")).alias(\"Total_Sales\"))"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"aggregated_df.write.format(\"delta\").mode(\"overwrite\").saveAsTable('salesmart.SalesAggregation')\n",
+							"print(\"Write in Delta Completed !!!\")"
+						],
+						"outputs": [],
+						"execution_count": 6
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/sparkPool')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
