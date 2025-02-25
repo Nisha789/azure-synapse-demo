@@ -1,0 +1,17 @@
+{
+	"name": "spark_sql_pool_select_query",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) * FROM [salesmart].[dbo].[salesaggregation]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "salesmart",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
