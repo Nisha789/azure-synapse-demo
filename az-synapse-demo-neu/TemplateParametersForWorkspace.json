@@ -11,11 +11,11 @@
 		"ADLS_Sales_dataset_LS_accountKey": {
 			"value": ""
 		},
-		"az-synapse-demo-neu-WorkspaceDefaultSqlServer_connectionString": {
-			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:az-synapse-demo-neu.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
-		},
 		"CosmosDB_LS_connectionString": {
 			"value": ""
+		},
+		"az-synapse-demo-neu-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:az-synapse-demo-neu.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"value": "https://adlsstgaccdemoneu.dfs.core.windows.net/"
